@@ -471,7 +471,7 @@ public class LessonFourRenderer implements GLSurfaceView.Renderer {
 
         // Load the texture
 //        mTextureDataHandle = TextureHelper.loadTexture(mActivityContext, R.drawable.bumpy_bricks_public_domain);
-        mTextureDataHandle = ImageLoader.loadTextureId("/storage/emulated/0/myscreen_7.png");
+        mTextureDataHandle = ImageLoader.loadTextureId();
     }
 
     @Override
