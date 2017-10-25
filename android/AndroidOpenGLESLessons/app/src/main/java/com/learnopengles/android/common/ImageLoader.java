@@ -71,6 +71,7 @@ public class ImageLoader {
         return bitmap;
     }
 
+
     private static int getTextureIdOfLoadedImage(Bitmap bitmap) {
         if (bitmap == null) {
             Log.e(TAG, "getTextureIdOfLoadedImage: invalid bitmap");
@@ -78,13 +79,19 @@ public class ImageLoader {
         }
 
         Log.i(TAG, "getTextureIdOfLoadedImage Image size: " + bitmap.getWidth() + " x " + bitmap.getHeight());
-//
+
 //        EglCore eglCore = new EglCore(null, FLAG_RECORDABLE);
 //        OffscreenSurface offscreenSurface = new OffscreenSurface(eglCore, 10, 10);
 //        offscreenSurface.makeCurrent();
         int textures[] = new int[1];
+        int framebuffers[] = new int[1];
+
         GLES20.glGenTextures(1, textures, 0);
+        GLES20.glGenFramebuffers(1, framebuffers, 0);
+
         int textureId = textures[0];
+        int framebufferId = framebuffers[0];
+
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
@@ -94,9 +101,15 @@ public class ImageLoader {
                 GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
                 GLES20.GL_CLAMP_TO_EDGE);
+
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, framebufferId);
+        GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D, framebufferId, 0);
+
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
 
         Log.d(TAG, "getTextureIdOfLoadedImage textureId: " + textureId);
-        return textureId;
+        Log.d(TAG, "getTextureIdOfLoadedImage framebufferId: " + framebufferId);
+        return framebufferId;
     }
 }
